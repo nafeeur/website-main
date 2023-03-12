@@ -51,10 +51,9 @@ export default function Home() {
 
         </Head>
 
+        <body><script id="aioa-adawidget" src="https://www.skynettechnologies.com/accessibility/js/all-in-one-accessibility-js-widget-minify.js?colorcode=#d1202f&token=&position=bottom_right"></script></body>
 
-
-        <main className=' dark:bg-nord-black-3 bg-white px-10 md:px-18 lg:px-35 font-mono bg-repeat heropattern-floatingcogs-nord-gray w-full h-full dark:heropattern-circuitboard-nord-black-1
-'>
+        <main className=' dark:bg-nord-black-3 bg-white px-10 md:px-18 lg:px-35 font-mono bg-repeat heropattern-floatingcogs-nord-gray w-full h-full dark:heropattern-circuitboard-nord-black-1'>
 
 
           <section className='min-h-screen'>
