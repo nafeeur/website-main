@@ -260,7 +260,7 @@ export default function Home() {
                   <div className="p-6">
                     <h5 className=" text-xl font-bold mb-2 text-right text-chirper dark:text-tail">Chirper</h5>
                     <p className="text-gray-700 dark:text-gray-200 text-base mb-4 text-right">
-                    A Twitter clone app written in Swift that uses the Twitter API to view, compose, favorite, and retweet tweets. It also utilizes an OAuth authentication system to allow users to log in with their Twitter account.
+                    A Twitter clone app written in Swift that uses the Twitter API to view, compose, favorite, and retweet tweets. It also utilizes an OAuth authentication system to allow users to log in with their Twitter account. </p>
                     <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
                     <div className='flex justify-center gap-3 py-5 '>
 
