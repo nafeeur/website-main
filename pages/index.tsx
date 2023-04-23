@@ -283,7 +283,7 @@ export default function Home() {
                   <div className="p-6">
                     <h5 className=" text-xl font-bold mb-2 text-left text-tip dark:text-tail">TipCalc</h5>
                     <p className="text-gray-700 dark:text-gray-200 text-base mb-4 text-left">
-                    A simple tip calculator app written for iOS. It allows them to split bills, obtain individual amounts, and convert them to different currencies. The app also includes dark mode functionality and an intuitive user interface.
+                    A simple tip calculator app written for iOS. It allows users to split bills, obtain individual amounts, and convert them to different currencies. The app also includes dark mode functionality and an intuitive user interface.
                     </p>
                     <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
                     <div className='flex justify-center gap-3 py-5 '>
