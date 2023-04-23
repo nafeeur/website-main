@@ -129,7 +129,7 @@ export default function Home() {
 
 
             <h3 className='text-3xl py-10 text-center text-purp dark:text-tailp'> Personal Projects</h3>
-            <p className='text-gray-600 text-center text-md py-2 md:text-xl dark:text-gray-300 leading-8 max-w-lg mx-auto'>Throughout my College years I had the opportunity to work on various projects using different languages and frameworks. Below are some of the higlighted examples.</p>
+            <p className='text-gray-600 text-center text-md py-2 md:text-xl dark:text-gray-300 leading-8 max-w-lg mx-auto'>Throughout my college years, I had the opportunity to work on various projects using different languages and frameworks. Below are some of the highlighted examples.</p>
 
 
             <div data-aos="zoom-in-top" data-aos-delay="50" data-aos-duration="600">
@@ -139,8 +139,7 @@ export default function Home() {
                 <div className="p-6">
                   <h5 className=" text-xl font-bold mb-2 text-red dark:text-tail">Astronot Bot</h5>
                   <p className="text-gray-700 dark:text-gray-200 text-base mb-4">
-                    A Discord Bot written in Python. It utilizes NASA and Wolfram’s APIs to respond to various user commands and returns space-related facts, pictures as well as solve
-                    computational and mathematical problems. 
+           A Discord Bot written in Python that utilizes NASA and Wolfram’s APIs to respond to various user commands and return space-related facts and pictures, as well as solve computational and mathematical problems.
                   </p>
                   <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
                   <div className='flex justify-center gap-3 py-5 '>
@@ -175,7 +174,7 @@ export default function Home() {
                 <div className="p-6">
                   <h5 className=" text-xl font-bold mb-2 text-green-600 dark:text-tail">Texiri</h5>
                   <p className="text-gray-700 dark:text-gray-200 text-base mb-4">
-                  An "application" based on Twilio API that can provide answers through SMS to various user search inquiries, solve computational problems, translate texts, fetch weather/news and download high quality images. All these can be accomplished just by sending a text to a number and does not require WiFi or Celular Data. 
+                 An AI assistant based on the Twilio API can provide answers through SMS for various user search inquiries, solve computational problems, translate texts, fetch weather/news, and download high-quality images. All of this can be accomplished by simply sending a text to a number and does not require WiFi or cellular data
                   </p>
                   <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
                   <div className='flex justify-center gap-3 py-5 '>
@@ -210,7 +209,7 @@ export default function Home() {
                 <div className="p-6">
                   <h5 className=" text-xl font-bold mb-2 text-blue-500 dark:text-tail">Newscord Bot</h5>
                   <p className="text-gray-700 dark:text-gray-200 text-base mb-4">
-                    A Python based Discord bot that employs News API to provide top news of the day from various categories in addition to a summary of the article using AI. It also uses Wikipedia API to provide breif summary of any Wiki articles.
+                   A Python-based Discord bot that utilizes the News API to provide the top news of the day from various categories, along with a summary of the article using summary AI. It also utilizes the Wikipedia API to provide a brief summary of any Wikipedia articles.
                   </p>
 
                   <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
@@ -261,8 +260,7 @@ export default function Home() {
                   <div className="p-6">
                     <h5 className=" text-xl font-bold mb-2 text-right text-chirper dark:text-tail">Chirper</h5>
                     <p className="text-gray-700 dark:text-gray-200 text-base mb-4 text-right">
-                    A Twitter clone App written in Swift that uses Twitter-API to view, compose, favorite, and retweet tweets. It also utilizes OAuth authentican system to login users with Twitter account.
-                    </p>
+                    A Twitter clone app written in Swift that uses the Twitter API to view, compose, favorite, and retweet tweets. It also utilizes an OAuth authentication system to allow users to log in with their Twitter account.
                     <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
                     <div className='flex justify-center gap-3 py-5 '>
 
@@ -285,7 +283,7 @@ export default function Home() {
                   <div className="p-6">
                     <h5 className=" text-xl font-bold mb-2 text-left text-tip dark:text-tail">TipCalc</h5>
                     <p className="text-gray-700 dark:text-gray-200 text-base mb-4 text-left">
-                    A simple tip calculator app written for iOS that users can use to split bills, get individual ammounts and convert it to different currencies. It also has dark mode functionality and an intuitive UI.
+                    A simple tip calculator app written for iOS. It allows them to split bills, obtain individual amounts, and convert them to different currencies. The app also includes dark mode functionality and an intuitive user interface.
                     </p>
                     <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
                     <div className='flex justify-center gap-3 py-5 '>
@@ -331,7 +329,7 @@ export default function Home() {
                   <div className="p-6">
                     <h5 className=" text-xl font-bold mb-2 text-sb dark:text-tail">Study Bubble</h5>
                     <p className="text-gray-700 dark:text-gray-200 text-base mb-4">
-                    A web application built using React which uses the Google Geocoding and Yelp API to search up and recommend users public places within NYC. The application also uses Google Firebase authentication system for user Login and Registration.
+                   A web application built using React that utilizes the Google Geocoding and Yelp API to search for and recommend public places within NYC. The application also integrates the Google Firebase authentication system for user login and registration
                     </p>
                     <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
                     <div className='flex justify-center gap-3 py-5 '>
