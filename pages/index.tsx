@@ -100,9 +100,8 @@ export default function Home() {
               <h2 className='text-5xl py-2 font-bold text-tail dark:bg-gradient-to-r
             from-tail via-purp to-tailp dark:bg-clip-text dark:text-transparent 
             animate-text fade-left md:text-6xl'>Nafeeur Rahman</h2>
-              <h2 className='2xl:mt-3 animate-fade-right text-gray-800 dark:text-gray-300 text-2xl py-2 md:text-3xl'>CS and Philosophy Student <span className="text-tail dark:bg-gradient-to-r
-            from-teal-300 via-purple-400 to-pink-400 dark:bg-clip-text dark:text-transparent animate-text">@</span> CUNY</h2>
-              <p className='2xl:mt-5 animate-fade-left text-gray-600 text-md py-5 md:text-xl leading-8 max-w-lg mx-auto dark:text-gray-400'>Aspiring Software Engineer and Tech Policy advocate.</p>
+              <h2 className='2xl:mt-3 animate-fade-right text-gray-800 dark:text-gray-300 text-2xl py-2 md:text-3xl'>Software Engineer <span className="text-tail dark:bg-gradient-to-r
+            from-teal-300 via-purple-400 to-pink-400 dark:bg-clip-text dark:text-transparent animate-text">@</span> MIT Lincoln Lab</h2>
             </div>
 
 
