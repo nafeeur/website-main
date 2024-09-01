@@ -74,7 +74,7 @@ export default function Home() {
                 <li>
                   <button onClick={(e) => {
                     e.preventDefault();
-                    window.open('https://drive.google.com/file/d/1yy56P77yUrSucez3rYd1FxjXekO-wHZI/view?usp=sharing', "_blank");
+                    window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=0s', "_blank");
                   }} className="border-blue-700 border-solid border-2 dark:border-0 dark:shadow-blue-500/50 bg-blue-500 hover:bg-blue-600 text-white font-semi-bold py-1 px-3 rounded-lg shadow-lg ml-10 transition duration-300 ease-in-out">
                     Resume
                   </button>
