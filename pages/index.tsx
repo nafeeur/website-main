@@ -1,378 +1,781 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import Parallax from '../pages/parallax'
-import styles from '../styles/Home.module.css'
-import { BsMoonStarsFill, BsCodeSlash } from 'react-icons/bs'
-import { AiFillLinkedin, AiFillGithub, AiTwotoneMail } from 'react-icons/ai'
-import { SiWolframmathematica, SiNasa, SiIos, SiTwilio, SiReact, SiJavascript, SiYelp, SiGooglemaps, SiCss3, SiTwitter, SiXcode, SiSwift, SiCocoapods, SiGoogletranslate, SiUnsplash, SiWikipedia, SiGooglemessages, SiOpenai } from 'react-icons/si'
-import { FaDiscord, FaPython } from 'react-icons/fa'
-import { HiNewspaper } from 'react-icons/hi'
-import naf from '../public/pfp.png'
-import nasa from '../public/NASA_logo.svg'
-import next from 'next'
-import ds from '../public/ds.png'
-import tip from '../public/tip_calc.gif'
-import tweet from '../public/tweet.gif'
-import sb from '../public/study_bubble.jpg'
-import bmo from '../public/bmo.gif'
-import gun from '../public/gun.gif'
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import { useEffect, useState } from 'react'
-
-
-
-const inter = Inter({ subsets: ['latin'] })
-
-
+import { useEffect } from "react";
+import Head from "next/head";
 
 export default function Home() {
-
-  const [darkMode, setDarkMode] = useState(false);
-
   useEffect(() => {
-    AOS.init();
+    // -------------------------------
+    // Custom Cursor & Sphere Parallax
+    // -------------------------------
+    let sphereScale = 1;
+    let lastMouseX = window.innerWidth / 2;
+    let lastMouseY = window.innerHeight / 2;
+    const sphere = document.getElementById("sphere");
+
+    document.addEventListener("mousemove", (e) => {
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+      const xPercent = (e.clientX / window.innerWidth - 0.5) * 30;
+      const yPercent = (e.clientY / window.innerHeight - 0.5) * 30;
+      if (sphere) {
+        sphere.style.transform = `scale(${sphereScale}) rotateX(${-yPercent}deg) rotateY(${xPercent}deg)`;
+      }
+    });
+
+    const cursor = document.getElementById("customCursor");
+    document.addEventListener("mousemove", (e) => {
+      if (cursor) {
+        cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      }
+    });
+
+    // -------------------------------
+    // Subtle Wave Visualizer Script
+    // -------------------------------
+    const visualizer = document.getElementById("visualizer");
+    const ctx = visualizer ? visualizer.getContext("2d") : null;
+
+    function resizeVisualizer() {
+      if (visualizer) {
+        visualizer.width = window.innerWidth;
+        visualizer.height = 150;
+      }
+    }
+    window.addEventListener("resize", resizeVisualizer);
+    resizeVisualizer();
+
+    let time = 0;
+    function animateWave() {
+      if (!ctx || !visualizer) return;
+      ctx.clearRect(0, 0, visualizer.width, visualizer.height);
+      time += 0.02;
+      ctx.beginPath();
+      const amplitude = visualizer.height / 4;
+      const frequency = 0.01;
+      ctx.moveTo(0, visualizer.height / 2 + Math.sin(0 * frequency + time) * amplitude);
+      for (let x = 0; x < visualizer.width; x++) {
+        const y = visualizer.height / 2 + Math.sin(x * frequency + time) * amplitude;
+        ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = "rgba(224, 106, 224, 0.15)";
+      ctx.lineWidth = 2;
+      ctx.shadowColor = "rgba(224, 106, 224, 0.15)";
+      ctx.shadowBlur = 5;
+      ctx.stroke();
+      requestAnimationFrame(animateWave);
+    }
+    animateWave();
+
+    // -------------------------------
+    // Space Invaders Game Script
+    // -------------------------------
+    const gameCanvas = document.getElementById("spaceInvadersCanvas");
+    const gCtx = gameCanvas ? gameCanvas.getContext("2d") : null;
+
+    function resizeGameCanvas() {
+      if (gameCanvas) {
+        gameCanvas.width = window.innerWidth;
+        gameCanvas.height = window.innerHeight;
+      }
+    }
+    window.addEventListener("resize", resizeGameCanvas);
+    resizeGameCanvas();
+
+    let spaceshipX = gameCanvas ? gameCanvas.width / 2 : 0;
+    let spaceshipY = gameCanvas ? gameCanvas.height - 60 : 0;
+    const spaceshipWidth = 40;
+    const spaceshipHeight = 40;
+    const spaceshipSpeed = 8;
+    let bullets = [];
+    const bulletSpeed = 10;
+    let enemies = [];
+    const enemySpeed = 2;
+    const spawnInterval = 1500;
+    let leftPressed = false;
+    let rightPressed = false;
+    let spacePressed = false;
+    const shapeTypes = ["circle", "square", "triangle", "diamond", "star"];
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft" || e.key === "a") leftPressed = true;
+      if (e.key === "ArrowRight" || e.key === "d") rightPressed = true;
+      if (e.key === " ") spacePressed = true;
+    });
+    document.addEventListener("keyup", (e) => {
+      if (e.key === "ArrowLeft" || e.key === "a") leftPressed = false;
+      if (e.key === "ArrowRight" || e.key === "d") rightPressed = false;
+      if (e.key === " ") spacePressed = false;
+    });
+
+    function spawnEnemy() {
+      if (!gameCanvas) return;
+      const x = Math.random() * (gameCanvas.width - 50) + 25;
+      const y = -50;
+      const size = 30 + Math.random() * 15;
+      const type = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+      enemies.push({ x, y, size, type });
+    }
+
+    function update() {
+      if (!gameCanvas) return;
+      if (leftPressed) spaceshipX -= spaceshipSpeed;
+      if (rightPressed) spaceshipX += spaceshipSpeed;
+      if (spaceshipX < 0) spaceshipX = 0;
+      if (spaceshipX + spaceshipWidth > gameCanvas.width)
+        spaceshipX = gameCanvas.width - spaceshipWidth;
+      if (spacePressed) {
+        bullets.push({ x: spaceshipX + spaceshipWidth / 2, y: spaceshipY });
+        spacePressed = false;
+      }
+      bullets = bullets
+        .map((b) => ({ x: b.x, y: b.y - bulletSpeed }))
+        .filter((b) => b.y > 0);
+      enemies.forEach((enemy) => (enemy.y += enemySpeed));
+      enemies = enemies.filter((enemy) => enemy.y < gameCanvas.height + 50);
+      checkCollisions();
+    }
+
+    function checkCollisions() {
+      bullets.forEach((bullet) => {
+        enemies.forEach((enemy) => {
+          const distX = bullet.x - enemy.x;
+          const distY = bullet.y - enemy.y;
+          const distance = Math.sqrt(distX * distX + distY * distY);
+          if (distance < enemy.size) enemy.hit = true;
+        });
+      });
+      enemies = enemies.filter((enemy) => !enemy.hit);
+      const sphereRect = sphere ? sphere.getBoundingClientRect() : null;
+      if (!sphereRect) return;
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        const bullet = bullets[i];
+        if (
+          bullet.x >= sphereRect.left &&
+          bullet.x <= sphereRect.right &&
+          bullet.y >= sphereRect.top &&
+          bullet.y <= sphereRect.bottom
+        ) {
+          bullets.splice(i, 1);
+          sphereScale += 0.05;
+          const xPercent = (lastMouseX / window.innerWidth - 0.5) * 30;
+          const yPercent = (lastMouseY / window.innerHeight - 0.5) * 30;
+          if (sphere) {
+            sphere.style.transform = `scale(${sphereScale}) rotateX(${-yPercent}deg) rotateY(${xPercent}deg)`;
+            sphere.classList.add("hit-animation");
+            setTimeout(() => sphere.classList.remove("hit-animation"), 300);
+          }
+        }
+      }
+    }
+
+    function drawSpaceship(x, y, w, h) {
+      if (!gCtx) return;
+      gCtx.save();
+      gCtx.translate(x + w / 2, y + h / 2);
+      gCtx.rotate(Math.sin(Date.now() / 100) * 0.05);
+      gCtx.fillStyle = "#00ffff";
+      gCtx.beginPath();
+      gCtx.moveTo(0, -h / 2);
+      gCtx.lineTo(w / 2, h / 2);
+      gCtx.lineTo(-w / 2, h / 2);
+      gCtx.closePath();
+      gCtx.fill();
+      gCtx.restore();
+    }
+
+    function drawShape(x, y, size, type) {
+      if (!gCtx) return;
+      gCtx.save();
+      gCtx.translate(x, y);
+      gCtx.rotate(Date.now() / 1000);
+      switch (type) {
+        case "circle":
+          gCtx.beginPath();
+          gCtx.arc(0, 0, size, 0, 2 * Math.PI);
+          gCtx.strokeStyle = "#00ffe0";
+          gCtx.lineWidth = 2;
+          gCtx.stroke();
+          break;
+        case "square":
+          gCtx.beginPath();
+          gCtx.rect(-size / 2, -size / 2, size, size);
+          gCtx.strokeStyle = "#ff6fd8";
+          gCtx.lineWidth = 2;
+          gCtx.stroke();
+          break;
+        case "triangle":
+          gCtx.beginPath();
+          gCtx.moveTo(-size / 2, size / 2);
+          gCtx.lineTo(size / 2, size / 2);
+          gCtx.lineTo(0, -size / 2);
+          gCtx.closePath();
+          gCtx.fillStyle = "#7afcff";
+          gCtx.fill();
+          break;
+        case "diamond":
+          gCtx.beginPath();
+          gCtx.moveTo(0, -size / 2);
+          gCtx.lineTo(size / 2, 0);
+          gCtx.lineTo(0, size / 2);
+          gCtx.lineTo(-size / 2, 0);
+          gCtx.closePath();
+          gCtx.strokeStyle = "#ffb3ff";
+          gCtx.lineWidth = 2;
+          gCtx.stroke();
+          break;
+        case "star":
+          gCtx.fillStyle = "#89faff";
+          gCtx.beginPath();
+          for (let i = 0; i < 5; i++) {
+            gCtx.lineTo(0, -size);
+            gCtx.translate(0, -size);
+            gCtx.rotate((Math.PI * 2) / 5);
+            gCtx.translate(0, size);
+          }
+          gCtx.closePath();
+          gCtx.fill();
+          break;
+      }
+      gCtx.restore();
+    }
+
+    function draw() {
+      if (!gCtx) return;
+      gCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      drawSpaceship(spaceshipX, spaceshipY, spaceshipWidth, spaceshipHeight);
+      bullets.forEach((b) => {
+        gCtx.beginPath();
+        gCtx.arc(b.x, b.y, 5, 0, 2 * Math.PI);
+        gCtx.fillStyle = "#ff66ff";
+        gCtx.fill();
+      });
+      enemies.forEach((enemy) => {
+        drawShape(enemy.x, enemy.y, enemy.size, enemy.type);
+      });
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    setInterval(spawnEnemy, spawnInterval);
+    requestAnimationFrame(gameLoop);
   }, []);
 
-
   return (
-
-
     <>
-
-
-      <div className={darkMode ? 'dark' : ''}>
-        <Head>
-          <title>Nafeeur Rahman</title>
-          <meta name="description" content="Generated by create next app" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href="/favicon.ico" />
-
-        </Head>
-
-
-        <main className=' dark:bg-nord-black-3 bg-white px-10 md:px-18 lg:px-35 font-mono bg-repeat heropattern-floatingcogs-nord-gray w-full h-full dark:heropattern-circuitboard-nord-black-1'>
-
-
-          <section className='min-h-screen'>
-
-
-
-
-            <nav className="py-10 mb-12 flex justify-between">
-              <span className="type-hello lg:text-2xl md:text-xl text-nord-black-3 dark:text-gray-300 text-lg font-mono"></span>
-              <ul className='flex items-center'>
-
-
-
-
-                <li>
-                  <BsMoonStarsFill onClick={() => setDarkMode(!darkMode)} className='animate-bounce cursor-pointer text-2xl text-nord-black-3 dark:text-teal-400' />
-                </li>
-
-                <li>
-                  <button onClick={(e) => {
-                    e.preventDefault();
-                    window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=0s', "_blank");
-                  }} className="border-blue-700 border-solid border-2 dark:border-0 dark:shadow-blue-500/50 bg-blue-500 hover:bg-blue-600 text-white font-semi-bold py-1 px-3 rounded-lg shadow-lg ml-10 transition duration-300 ease-in-out">
-                    Resume
-                  </button>
-                </li>
-
-              </ul>
-            </nav>
-
-            <section >
-
-
-
-
-            </section>
-            <div className='justify-center' >
-
-
-              <Image alt='pfp' src={naf} className="animate-spin animate-once animate-duration-30 hover:animate-spin mx-auto w-60 h-60 rounded-full shadow-lg" title="Profile Pic was generated using DALL-E 2 AI" />
-
-            </div>
-            <div className='text-center p-10'>
-
-              <h2 className='text-5xl py-2 font-bold text-tail dark:bg-gradient-to-r
-            from-tail via-purp to-tailp dark:bg-clip-text dark:text-transparent 
-            animate-text fade-left md:text-6xl'>Nafeeur Rahman</h2>
-              <h2 className='2xl:mt-3 animate-fade-right text-gray-800 dark:text-gray-300 text-2xl py-2 md:text-3xl'>Software Engineer <span className="text-tail dark:bg-gradient-to-r
-            from-teal-300 via-purple-400 to-pink-400 dark:bg-clip-text dark:text-transparent animate-text">@</span> MIT Lincoln Lab</h2>
-            </div>
-
-
-            <div className='cursor-pointer text-6xl text-gray-700 dark:text-gray-500 flex justify-center gap-16 py-3 2xl:mt-15'>
-              <AiFillGithub onClick={(e) => {
-                e.preventDefault();
-                window.open('https://github.com/nafeeur', "_blank");
-              }} className="z-20 animate-fade-up hover:text-red dark:hover:text-tailp" />
-              <AiTwotoneMail onClick={(e) => {
-                e.preventDefault();
-                window.open('mailto:rnafeeur@gmail.com', "_blank");
-              }} className="z-20 animate-fade-up hover:text-green-600 hover:dark:text-teal-400" />
-              <AiFillLinkedin onClick={(e) => {
-                e.preventDefault();
-                window.open('https://linkedin.com/in/nafeeur', "_blank");
-              }} className="z-20 animate-fade-up hover:text-blue-500 hover:dark:text-tail" />
-
-            </div>
-          </section>
-
-
-          <section>
-
-
-
-            <h3 className='text-3xl py-10 text-center text-purp dark:text-tailp'> Personal Projects</h3>
-            <p className='text-gray-600 text-center text-md py-2 md:text-xl dark:text-gray-300 leading-8 max-w-lg mx-auto'>Throughout my college years, I had the opportunity to work on various projects using different languages and frameworks. Below are some of the highlighted examples.</p>
-
-
-            <div data-aos="zoom-in-top" data-aos-delay="50" data-aos-duration="600">
-
-              <div className="dark:bg-tailcard dark:border-solid dark:border-2 dark:border-tail text-center mx-auto rounded-xl shadow-lg bg-white max-w-2xl max-h-2xl min-2w-xl min-h-2xl my-8 mt-10">
-                <iframe className='mx-auto w-full aspect-video p-2' src="https://www.youtube.com/embed/nBMbrkYi7sc" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" ></iframe>
-                <div className="p-6">
-                  <h5 className=" text-xl font-bold mb-2 text-red dark:text-tail">Astronot Bot</h5>
-                  <p className="text-gray-700 dark:text-gray-200 text-base mb-4">
-           A Discord Bot written in Python that utilizes NASA and Wolfram’s APIs to respond to various user commands and return space-related facts and pictures, as well as solve computational and mathematical problems.
-                  </p>
-                  <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
-                  <div className='flex justify-center gap-3 py-5 '>
-
-                    <FaDiscord className='text-discord text-4xl dark:text-teal-400'></FaDiscord>
-                    <FaPython className='text-python text-4xl dark:text-teal-400'></FaPython>
-                    <SiWolframmathematica className='text-wolf text-4xl dark:text-teal-400'></SiWolframmathematica>
-                    <SiNasa className='text-nasa text-4xl dark:text-teal-400'></SiNasa>
-
-
-                  </div>
-
-
-                  <button onClick={(e) => {
-                e.preventDefault();
-                window.open('https://github.com/nafeeur/AstronOt-Bot', "_blank");
-              }} className="text-sm border-solid border-2 mb-2 dark:border-0 border-blue-700  dark:shadow-blue-500/50 bg-blue-500 hover:bg-blue-600 text-white font-semi-bold py-1 px-3 rounded-lg shadow-lg transition duration-300 ease-in-out">
-                    &lt;/&gt; View code
-                  </button>
-                </div>
-              </div>
-            </div>
-
-
-
-            <div data-aos="zoom-in-left" data-aos-delay="50" data-aos-duration="600">
-
-
-
-              <div className="dark:bg-tailcard dark:border-solid dark:border-2 dark:border-tail text-center mx-auto rounded-xl shadow-lg bg-white max-w-2xl max-h-2xl min-w-xl min-h-xl my-8">
-                <iframe className='mx-auto p-2 w-full aspect-video' src="https://www.youtube.com/embed/_D6587-r6NA" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" ></iframe>
-                <div className="p-6">
-                  <h5 className=" text-xl font-bold mb-2 text-green-600 dark:text-tail">Texiri</h5>
-                  <p className="text-gray-700 dark:text-gray-200 text-base mb-4">
-                 An AI assistant based on the Twilio API can provide answers through SMS for various user search inquiries, solve computational problems, translate texts, fetch weather/news, and download high-quality images. All of this can be accomplished by simply sending a text to a number and does not require WiFi or cellular data
-                  </p>
-                  <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
-                  <div className='flex justify-center gap-3 py-5 '>
-
-
-                    <SiTwilio className='text-twilio text-3xl dark:text-teal-400'></SiTwilio>
-                    <SiUnsplash className='text-balck text-3xl dark:text-teal-400'></SiUnsplash>
-                    <SiGoogletranslate className='text-tran text-3xl dark:text-teal-400'></SiGoogletranslate>
-
-                    <SiWolframmathematica className='text-wolf text-4xl dark:text-teal-400'></SiWolframmathematica>
-                    <SiGooglemessages className='text-mes text-4xl dark:text-teal-400'></SiGooglemessages>
-
-                  </div>
-                  <button onClick={(e) => {
-                e.preventDefault();
-                window.open('https://github.com/nafeeur/Texiri', "_blank");
-              }} className="text-sm border-solid border-2 mb-2 dark:border-0 border-blue-700  dark:shadow-blue-500/50 bg-blue-500 hover:bg-blue-600 text-white font-semi-bold py-1 px-3 rounded-lg shadow-lg transition duration-300 ease-in-out">
-                    &lt;/&gt; View code
-                  </button>
-                </div>
-              </div>
-            </div>
-
-
-
-            <div data-aos="zoom-in-right" data-aos-delay="50" data-aos-duration="600">
-
-
-              <div className="dark:bg-tailcard dark:border-solid dark:border-2 dark:border-tail text-center mx-auto rounded-xl shadow-lg bg-white max-w-2xl max-h-2xl min-w-xl min-h-xl my-8">
-
-                <iframe className='mx-auto p-2 w-full aspect-video' src="https://www.youtube.com/embed/fA5tc_HBS94" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" ></iframe>
-                <div className="p-6">
-                  <h5 className=" text-xl font-bold mb-2 text-blue-500 dark:text-tail">Newscord Bot</h5>
-                  <p className="text-gray-700 dark:text-gray-200 text-base mb-4">
-                   A Python-based Discord bot that utilizes the News API to provide the top news of the day from various categories, along with a summary of the article using summary AI. It also utilizes the Wikipedia API to provide a brief summary of any Wikipedia articles.
-                  </p>
-
-                  <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
-                  <div className='flex justify-center gap-3 py-5 '>
-
-                    <FaDiscord className='text-discord text-4xl dark:text-teal-400'></FaDiscord>
-                    <FaPython className='text-python text-4xl dark:text-teal-400'></FaPython>
-                    <HiNewspaper className='text-news text-4xl dark:text-teal-400 '></HiNewspaper>
-                    <SiWikipedia className='text-black text-4xl dark:text-teal-400'></SiWikipedia>
-
-
-                  </div>
-                  <button onClick={(e) => {
-                e.preventDefault();
-                window.open('https://github.com/nafeeur/Newscord-Bot', "_blank");
-              }} className="text-sm border-solid border-2 mb-2 dark:border-0 border-blue-700  dark:shadow-blue-500/50 bg-blue-500 hover:bg-blue-600 text-white font-semi-bold py-1 px-3 rounded-lg shadow-lg transition duration-300 ease-in-out">
-                    &lt;/&gt; View code
-                  </button>
-                </div>
-              </div>
-            </div>
-
-
-
-
-          </section>
-
-          <section>
-            <h3 className='text-3xl py-10 text-center dark:text-tailp text-purp'> Mobile Projects</h3>
-
-            <div data-aos="fade-up" data-aos-duration="600">
-
-              <div className='justify-center lg:flex gap-0'>
-
-
-
-                <div className="text-center mx-auto rounded-xl shadow-lg backdrop-blur-sm max-w-sm max-h-sm min-w-sm min-h-sm my-10 ">
-
-                  <Image src={tip} alt="" className='p-2 rounded-3xl h-100 w-100 mx-auto' />
-
-                </div>
-
-
-                <div className="dark:bg-tailcard dark:border-solid dark:border-2 dark:border-tail text-center mx-auto rounded-xl shadow-lg bg-white max-w-md max-h-md min-w-md min-h-md my-5 ">
-
-
-
-                  <div className="p-6">
-                    <h5 className=" text-xl font-bold mb-2 text-right text-chirper dark:text-tail">Chirper</h5>
-                    <p className="text-gray-700 dark:text-gray-200 text-base mb-4 text-right">
-                    A Twitter clone app written in Swift that uses the Twitter API to view, compose, favorite, and retweet tweets. It also utilizes an OAuth authentication system to allow users to log in with their Twitter account. </p>
-                    <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
-                    <div className='flex justify-center gap-3 py-5 '>
-
-                      <SiTwitter className='text-twitter text-4xl dark:text-teal-400'></SiTwitter>
-                      <SiCocoapods className='text-coco text-4xl dark:text-teal-400'></SiCocoapods>
-                      <SiXcode className='text-xcode text-4xl dark:text-teal-400'></SiXcode>
-                      <SiSwift className='text-swift text-4xl dark:text-teal-400'></SiSwift>
-
-
-                    </div>
-                    <button onClick={(e) => {
-                e.preventDefault();
-                window.open('https://github.com/nafeeur/Chirper', "_blank");
-              }} className="text-sm border-solid border-2 mb-2 dark:border-0 border-blue-700  dark:shadow-blue-500/50 bg-blue-500 hover:bg-blue-600 text-white font-semi-bold py-1 px-3 rounded-lg shadow-lg transition duration-300 ease-in-out">
-                      &lt;/&gt; View code
-                    </button>
-                  </div>
-
-
-                  <div className="p-6">
-                    <h5 className=" text-xl font-bold mb-2 text-left text-tip dark:text-tail">TipCalc</h5>
-                    <p className="text-gray-700 dark:text-gray-200 text-base mb-4 text-left">
-                    A simple tip calculator app written for iOS. It allows users to split bills, obtain individual amounts, and convert them to different currencies. The app also includes dark mode functionality and an intuitive user interface.
-                    </p>
-                    <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
-                    <div className='flex justify-center gap-3 py-5 '>
-
-                    <SiIos className='text-ios text-4xl dark:text-teal-400'></SiIos>
-                      <SiCocoapods className='text-coco text-4xl dark:text-teal-400'></SiCocoapods>
-                      <SiXcode className='text-xcode text-4xl dark:text-teal-400'></SiXcode>
-                      <SiSwift className='text-swift text-4xl dark:text-teal-400'></SiSwift>
-
-
-                    </div>
-                    <button onClick={(e) => {
-                e.preventDefault();
-                window.open('https://github.com/nafeeur/TipCalc', "_blank");
-              }} className="text-sm border-solid border-2 mb-2 dark:border-0 border-blue-700  dark:shadow-blue-500/50 bg-blue-500 hover:bg-blue-600 text-white font-semi-bold py-1 px-3 rounded-lg shadow-lg transition duration-300 ease-in-out">
-                      &lt;/&gt; View code
-                    </button>
-                  </div>
-
-                </div>
-
-
-
-
-
-                <div className="p-2 text-center mx-auto rounded-xl shadow-lg backdrop-blur-sm max-w-sm max-h-xl min-w-sm min-h-xl my-10">
-
-                  <Image src={tweet} alt="" className='rounded-3xl shadow-lg h-90 w-80 mx-auto' />
-
-                </div>
-
-              </div>
-            </div>
-
-            <section>
-
-
-              <h3 className='text-3xl py-10 text-center text-purp dark:text-tailp'> FullStack Project</h3>
-              <div data-aos="zoom-in-down" data-aos-delay="50" data-aos-duration="600">
-
-                <div className="dark:bg-tailcard dark:border-solid dark:border-2 dark:border-tail text-center mx-auto rounded-xl shadow-lg bg-white max-w-2xl max-h-2xl min-2w-xl min-h-2xl my-5">
-                  <Image src={sb} alt="" className='p-2 rounded-lg' />
-                  <div className="p-6">
-                    <h5 className=" text-xl font-bold mb-2 text-sb dark:text-tail">Study Bubble</h5>
-                    <p className="text-gray-700 dark:text-gray-200 text-base mb-4">
-                   A web application built using React that utilizes the Google Geocoding and Yelp API to search for and recommend public places within NYC. The application also integrates the Google Firebase authentication system for user login and registration
-                    </p>
-                    <p className='text-gray-600 dark:text-purple-400 text-base'>Technologies used:</p>
-                    <div className='flex justify-center gap-3 py-5 '>
-
-                      <SiReact className='text-react text-4xl dark:text-teal-400'></SiReact>
-                      <SiJavascript className='text-js text-4xl dark:text-teal-400'></SiJavascript>
-                      <SiCss3 className='text-css text-4xl dark:text-teal-400'></SiCss3>
-                      <SiYelp className='text-yelp text-4xl dark:text-teal-400'></SiYelp>
-                      <SiGooglemaps className='text-map text-4xl dark:text-teal-400'></SiGooglemaps>
-                      
-
-
-
-                    </div>
-                    <button onClick={(e) => {
-                e.preventDefault();
-                window.open('https://github.com/nafeeur/studybubble-main', "_blank");
-              }} className="text-sm border-solid border-2 mb-2 dark:border-0 border-blue-700  dark:shadow-blue-500/50 bg-blue-500 hover:bg-blue-600 text-white font-semi-bold py-1 px-3 rounded-lg shadow-lg transition duration-300 ease-in-out">
-                      &lt;/&gt; View code
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </section>
-
-
-          <section>
-
-
-            <h3 className='text-xl py-10 text-center text-gray-800 dark:text-teal-400'>New projects under developement...</h3>
-
-            <div > <Image src={bmo} alt="bmo" width="150" className='mx-auto' /></div>
-
-
-          </section>
-
-
-        </main>
-
+      <Head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>About Me</title>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
+      <div className="background">
+        <div className="nebula"></div>
+        <div className="starfield"></div>
+        <canvas id="spaceInvadersCanvas"></canvas>
+        <div className="grid"></div>
+        <div className="corner-grid top-left"></div>
+        <div className="corner-grid top-right"></div>
+        <div className="vapor-overlay"></div>
+        <div className="glitch">hi, i'm NAF :)</div>
+        <div className="subtitle">swe @ MIT lincoln lab</div>
+        <div className="japanese-text">バットマン</div>
+        <div className="sphere-container">
+          <div className="sphere" id="sphere"></div>
+        </div>
+        <div className="gif-container">
+          <img
+            src="https://64.media.tumblr.com/20029c5c8b4300b183415cc39a771f22/ec3f1f9bd5c76bac-13/s500x750/bdfcd4fb56356963766fe8cc9fa56420bc7b1ac9.gif"
+            alt="Cool GIF"
+            className="cool-gif"
+          />
+        </div>
+        <div
+          className="particle"
+          style={{ top: "10%", left: "20%", animationDuration: "5s" }}
+        ></div>
+        <div
+          className="particle"
+          style={{ top: "50%", left: "60%", animationDuration: "3.5s" }}
+        ></div>
+        <div
+          className="particle"
+          style={{ top: "30%", left: "80%", animationDuration: "4.2s" }}
+        ></div>
+        <div
+          className="particle"
+          style={{ top: "70%", left: "25%", animationDuration: "4.8s" }}
+        ></div>
+        <div
+          className="particle"
+          style={{ top: "85%", left: "50%", animationDuration: "3.7s" }}
+        ></div>
+        <div className="scanline"></div>
+        <canvas id="visualizer"></canvas>
       </div>
+      <div className="custom-cursor" id="customCursor"></div>
+      <iframe
+        width="0"
+        height="0"
+        src="https://www.youtube.com/embed/OlAx0a82beU?autoplay=1&loop=1&playlist=OlAx0a82beU&controls=0&showinfo=0"
+        frameBorder="0"
+        allow="autoplay; encrypted-media"
+        style={{ display: "none" }}
+      ></iframe>
+      <style jsx global>{`
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        html,
+        body {
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          cursor: none;
+          font-family: "Orbitron", sans-serif;
+        }
+        body {
+          background: linear-gradient(45deg, #1a0033, #2b004d, #390066, #1a0033);
+          background-size: 400% 400%;
+          animation: gradientBG 10s ease infinite;
+          position: relative;
+        }
+        @keyframes gradientBG {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+        .nebula {
+          position: absolute;
+          top: -10%;
+          left: -10%;
+          width: 120%;
+          height: 120%;
+          background: radial-gradient(
+                      circle at 30% 30%,
+                      rgba(255, 0, 150, 0.15),
+                      transparent 70%
+                    ),
+                    radial-gradient(
+                      circle at 70% 70%,
+                      rgba(0, 255, 150, 0.15),
+                      transparent 70%
+                    );
+          animation: nebulaAnim 20s ease-in-out infinite;
+          z-index: 0.5;
+        }
+        @keyframes nebulaAnim {
+          0% {
+            transform: scale(1) rotate(0deg);
+          }
+          50% {
+            transform: scale(1.1) rotate(20deg);
+          }
+          100% {
+            transform: scale(1) rotate(0deg);
+          }
+        }
+        .starfield {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+          overflow: hidden;
+        }
+        .starfield::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 2px;
+          height: 2px;
+          background: white;
+          box-shadow: 50px 80px white,
+            100px 150px white,
+            150px 60px white,
+            200px 120px white,
+            250px 200px white,
+            300px 50px white,
+            350px 180px white,
+            400px 90px white,
+            450px 220px white,
+            500px 70px white,
+            550px 140px white,
+            600px 30px white,
+            650px 160px white,
+            700px 100px white,
+            750px 190px white,
+            800px 50px white;
+          animation: twinkle 3s infinite ease-in-out;
+        }
+        @keyframes twinkle {
+          0%,
+          100% {
+            opacity: 0.3;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
+        #spaceInvadersCanvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          z-index: 1;
+          pointer-events: none;
+        }
+        .background {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        }
+        .grid {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          transform: perspective(1000px) rotateX(60deg);
+          background: repeating-linear-gradient(
+              transparent,
+              transparent 48%,
+              #e06ae0 49%,
+              transparent 50%
+            ),
+            repeating-linear-gradient(
+              90deg,
+              transparent,
+              transparent 48%,
+              #e06ae0 49%,
+              transparent 50%
+            );
+          background-size: 50px 50px;
+          animation: gridScroll 8s linear infinite;
+          opacity: 0.8;
+          z-index: 1;
+          box-shadow: 0 0 20px rgba(224, 106, 224, 0.3);
+        }
+        @keyframes gridScroll {
+          from {
+            background-position: 0 0, 0 0;
+          }
+          to {
+            background-position: 0 50px, 50px 0;
+          }
+        }
+        .corner-grid {
+          position: fixed;
+          width: 700px;
+          height: 880px;
+          rotateX(60deg);
+          background: repeating-linear-gradient(
+              transparent,
+              transparent 48%,
+              #e06ae0 49%,
+              transparent 50%
+            ),
+            repeating-linear-gradient(
+              90deg,
+              transparent,
+              transparent 48%,
+              #3FC9DA 49%,
+              transparent 50%
+            );
+          background-size: 30px 30px;
+          opacity: 0.6;
+          animation: cornerGridAnim 8s linear infinite;
+          box-shadow: 0 0 20px rgba(224, 106, 224, 0.2);
+          z-index: 2;
+        }
+        .corner-grid.top-left {
+          top: 0;
+          left: 0;
+          clip-path: polygon(0 0, 100% 0, 0 100%);
+        }
+        .corner-grid.top-right {
+          top: 0;
+          right: 0;
+          clip-path: polygon(100% 0, 0 0, 100% 100%);
+        }
+        @keyframes cornerGridAnim {
+          from {
+            background-position: 0 0, 0 0;
+          }
+          to {
+            background-position: 0 30px, 30px 0;
+          }
+        }
+        .vapor-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(0, 0, 0, 0.3) 70%
+          );
+          pointer-events: none;
+          z-index: 2;
+          animation: pulse 5s infinite alternate;
+        }
+        @keyframes pulse {
+          0% {
+            opacity: 0.3;
+          }
+          100% {
+            opacity: 0.6;
+          }
+        }
+        .sphere-container {
+          position: fixed;
+          top: 55%;
+          left: 50%;
+          width: 250px;
+          height: 250px;
+          transform: translate(-50%, -50%);
+          z-index: 8;
+          perspective: 800px;
+        }
+        .sphere {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background: radial-gradient(
+            circle at 30% 30%,
+            #e06ae0,
+            #66a8d9,
+            #8c73a8
+          );
+          box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.5),
+            0 0 20px rgba(255, 255, 255, 0.5);
+          transform-style: preserve-3d;
+          transition: transform 0.1s ease-out;
+          animation: bubbleEffect 10s ease-in-out infinite;
+          position: relative;
+        }
+        @keyframes bubbleEffect {
+          0% {
+            filter: brightness(1) hue-rotate(0deg);
+          }
+          50% {
+            filter: brightness(1.2) hue-rotate(180deg);
+          }
+          100% {
+            filter: brightness(1) hue-rotate(360deg);
+          }
+        }
+        .sphere::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          pointer-events: none;
+        }
+        .sphere.hit-animation::after {
+          animation: hitGlow 0.3s ease-out;
+        }
+        @keyframes hitGlow {
+          0% {
+            box-shadow: 0 0 0px 0 rgba(255, 255, 255, 0);
+          }
+          50% {
+            box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.7);
+          }
+          100% {
+            box-shadow: 0 0 0px 0 rgba(255, 255, 255, 0);
+          }
+        }
+        .glitch {
+          position: fixed;
+          top: 2%;
+          width: 100%;
+          text-align: center;
+          font-size: 5.5rem;
+          letter-spacing: 0.1em;
+          color: #e06ae0;
+          text-shadow: 0 0 5px #e06ae0, 0 0 10px #e06ae0;
+          animation: glitch 3s infinite;
+          z-index: 5;
+        }
+        @keyframes glitch {
+          0% {
+            transform: translate(0);
+          }
+          20% {
+            transform: translate(-3px, 3px);
+          }
+          40% {
+            transform: translate(3px, -3px);
+          }
+          60% {
+            transform: translate(-3px, -3px);
+          }
+          80% {
+            transform: translate(3px, 3px);
+          }
+          100% {
+            transform: translate(0);
+          }
+        }
+        .subtitle {
+          position: fixed;
+          top: 25%;
+          width: 100%;
+          text-align: center;
+          font-size: 1.6rem;
+          color: #25F6F6;
+          letter-spacing: 0.08em;
+          z-index: 5;
+          text-shadow: 0 0 1px #25F6F6, 0 0 2px #25F6F6, 0 0 4px #25F6F6;
+          animation: fadeIn 4s ease infinite alternate;
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 0.3;
+          }
+        }
+        .japanese-text {
+          position: fixed;
+          top: 17.5%;
+          width: 100%;
+          text-align: center;
+          font-size: 2rem;
+          color: #8c73a8;
+          text-shadow: 0 0 5px #8c73a8;
+          z-index: 5;
+          animation: fadeIn 3s ease infinite alternate;
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0.5;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .gif-container {
+          position: fixed;
+          bottom: 5px;
+          right: 5px;
+          z-index: 6;
+        }
+        .cool-gif {
+          width: 50px;
+          height: auto;
+        }
+        .scanline {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.05) 1px,
+            transparent 1px
+          );
+          background-size: 100% 4px;
+          animation: scan 3s linear infinite;
+          pointer-events: none;
+          z-index: 7;
+        }
+        @keyframes scan {
+          0% {
+            background-position: 0 0;
+          }
+          100% {
+            background-position: 0 4px;
+          }
+        }
+        .custom-cursor {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 20px;
+          height: 20px;
+          border: 2px solid #e06ae0;
+          border-radius: 50%;
+          pointer-events: none;
+          transform: translate(-50%, -50%);
+          transition: transform 0.1s ease-out;
+          z-index: 8;
+        }
+        .custom-cursor::after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 20px;
+          height: 20px;
+          border: 2px solid #e06ae0;
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          animation: cursorPulse 1.5s infinite;
+        }
+        @keyframes cursorPulse {
+          0% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(1.5);
+            opacity: 0;
+          }
+        }
+        .particle {
+          position: absolute;
+          width: 4px;
+          height: 4px;
+          background: #e06ae0;
+          border-radius: 50%;
+          opacity: 0.2;
+          animation: flicker 3s infinite;
+        }
+        @keyframes flicker {
+          0%,
+          100% {
+            opacity: 0.1;
+          }
+          50% {
+            opacity: 0.4;
+          }
+        }
+        #visualizer {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 100px;
+          z-index: 3;
+          pointer-events: none;
+        }
+      `}</style>
     </>
-
-
-
-  )
+  );
 }
